@@ -1,52 +1,59 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r}
+#| include: FALSE
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # multideploy <img src="man/figures/multideploy-logo.svg" align="right" height="139" />
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 ## Overview
 
-The `multideploy` package provides tools for deploying file changes
-across multiple GitHub repositories. It’s designed to help you manage
-standardized configurations, CI/CD workflows, and other common files
-that need to be synchronized across multiple repositories.
+The `multideploy` package provides tools for deploying file changes across multiple GitHub repositories. It's designed to help you manage standardized configurations, CI/CD workflows, and other common files that need to be synchronized across multiple repositories.
 
 ## Installation
 
-You can install the development version of `multideploy` from
-[GitHub](https://github.comcoatless-rpkg/multideploy) with:
+You can install the development version of `multideploy` from [GitHub](https://github.comcoatless-rpkg/multideploy) with:
 
-``` r
+```r
 # install.packages("remotes")
 remotes::install_github("coatless-rpkg/multideploy")
 ```
 
 ## Authentication
 
-`multideploy` uses the [`gh`](https://github.com/r-lib/gh) package for
-GitHub API authentication and querying. Before using `multideploy`, make
-sure you have a GitHub Personal Access Token (PAT) set up:
+`multideploy` uses the [`gh`](https://github.com/r-lib/gh) package for 
+GitHub API authentication and querying. Before using `multideploy`, make sure
+you have a GitHub Personal Access Token (PAT) set up:
 
-``` r
+```r
 # Set GitHub PAT (or use .Renviron)
 Sys.setenv(GITHUB_PAT = askpass::askpass("What is your GitHub Personal Access Token (PAT)?"))
 ```
 
-It’s recommended to store your PAT in your `.Renviron` file rather than
-in your code.
+It's recommended to store your PAT in your `.Renviron` file rather than in your code.
 
 ## Quick Start Example
 
-Here’s an example showing how to deploy a standardized CI workflow file
-to multiple repositories using `multideploy`:
+Here's an example showing how to deploy a standardized CI workflow file to multiple repositories using `multideploy`:
 
-``` r
+```{r}
+#| label: quick-example
+#| eval: false
 library(multideploy)
 
 # List repositories in an organization matching a pattern
@@ -63,22 +70,23 @@ results <- file_deploy(
 print(results)
 ```
 
-> \[!IMPORTANT\]
+> [!IMPORTANT]
 >
-> The GitHub PAT used for authentication must have the necessary
-> permissions to access and modify the repositories’ workflows.
+> The GitHub PAT used for authentication must have the necessary permissions to
+> access and modify the repositories' workflows.
 
 ## Extended Overview
 
-If you’re looking for more detailed examples on how to use
-`multideploy`, we step through the additional features of the package
-within this section.
+If you're looking for more detailed examples on how to use `multideploy`, we
+step through the additional features of the package within this section.
 
 ### Repository Selection
 
 List and filter repositories across users or organizations:
 
-``` r
+```{r}
+#| label: repo-listing
+#| eval: false
 # Get all public repositories for a user
 user_repos <- repos("username", type = "public")
 
@@ -93,7 +101,9 @@ my_orgs <- orgs()
 
 Deploy individual files or sets of files to multiple repositories:
 
-``` r
+```{r}
+#| label: file-deploy
+#| eval: false
 # Deploy a single file
 file_deploy("local/path/file.R", "remote/path/file.R", repos)
 
@@ -120,7 +130,9 @@ pr_create(
 
 Preview changes before making them:
 
-``` r
+```{r}
+#| label: dry-run
+#| eval: false
 # Preview changes without making them
 file_deploy("local/file.R", "remote/file.R", repos, dry_run = TRUE)
 
@@ -130,4 +142,4 @@ pr_create(repos, "branch-name", "PR Title", "PR Body", mapping, dry_run = TRUE)
 
 ## License
 
-AGPL (\>= 3)
+AGPL (>= 3)

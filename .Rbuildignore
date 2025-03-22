@@ -3,3 +3,5 @@
 ^LICENSE\.md$
 ^.devcontainer$
 ^.github$
+^README\.Rmd$
+^\.github$
