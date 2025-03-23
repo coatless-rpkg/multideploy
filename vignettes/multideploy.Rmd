@@ -1,0 +1,357 @@
+---
+title: "Getting Started with multideploy"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with multideploy}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include: FALSE
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+The `multideploy` package provides a streamlined way to deploy file changes
+across multiple GitHub repositories. Whether you're managing standardized CI/CD
+configurations, common utility scripts, code style definitions, or any other 
+files that should be consistent across repositories, `multideploy` helps
+automate this process.
+
+This vignette will guide you through the main functionality of the package with
+practical examples.
+
+## Setup and Authentication
+
+First, load the multideploy package:
+
+```{r}
+#| label: setup
+#| eval: FALSE
+library(multideploy)
+```
+
+Before using `multideploy`, you need to authenticate with GitHub. The package
+uses the [`gh`](https://github.com/r-lib/gh) package for authentication, which 
+looks for a [GitHub Personal Access Token (PAT)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) in the `GITHUB_PAT` or
+`GITHUB_TOKEN` environment variables. This token can be set directly within the
+R script via:
+
+```{r}
+#| label: auth
+#| eval: FALSE
+# Set GitHub PAT (or better, use .Renviron)
+Sys.setenv(GITHUB_PAT = askpass::askpass("What is your GitHub Personal Access Token (PAT) ?"))
+```
+
+For regular use, it's recommended to add your PAT to the git credential system
+through the `gitcreds` package:
+
+```r
+gitcreds::gitcreds_set()
+```
+
+Alternatively, you can set the PAT directly in your `.Renviron` file by running:
+
+```r
+file.edit("~/.Renviron")
+```
+
+Then, type: 
+
+```bash
+GITHUB_PAT=your_github_pat_here
+```
+
+Your PAT needs appropriate permissions to access and modify repositories. 
+At a minimum, you'll need:
+
+- `repo` scope for accessing private repositories
+- `workflow` scope if you're modifying GitHub Actions workflows
+
+## Managing Repositories
+
+### Listing Repositories
+
+The `repos()` function allows you to list repositories for a user or organization:
+
+```{r}
+#| label: repos
+#| eval: FALSE
+# List repositories for a user
+user_repos <- repos("username")
+
+# List repositories for an organization
+org_repos <- repos("orgname", type = "public")
+
+# Filter repositories by name pattern
+api_repos <- repos("orgname", filter_regex = "^api-")
+
+# View the repositories
+head(api_repos)
+```
+
+### Listing Organizations
+
+If you're a member of multiple organizations, you can list them with:
+
+```{r orgs}
+#| label: orgs
+#| eval: FALSE
+my_orgs <- orgs()
+print(my_orgs)
+```
+
+## Working with Files
+
+### Getting File Content
+
+You can retrieve the content of a file from a GitHub repository:
+
+```{r}
+#| label: file-content
+#| eval: FALSE
+# Get content of a file
+workflow_file <- file_content("username/repo", ".github/workflows/ci.yml")
+
+# View the content
+cat(workflow_file$content)
+```
+
+### Creating or Updating Files
+
+To create or update a file in a repository:
+
+```{r}
+#| label: file-update
+#| eval: FALSE
+# Update a file
+result <- file_update(
+  repo = "username/repo",
+  path = ".github/workflows/ci.yml",
+  content = "updated workflow content...",
+  message = "Update CI workflow"
+)
+```
+
+## Deploying Files Across Repositories
+
+The core functionality of `multideploy` is deploying files across multiple repositories. This can be done in two ways:
+
+### Direct File Deployment
+
+Deploy a single file to multiple repositories:
+
+```{r}
+#| label: file-deploy
+#| eval: FALSE
+# Get repositories
+repos <- repos("orgname", filter_regex = "^api-")
+
+# Deploy a file to all repositories
+results <- file_deploy(
+  source_file = "templates/ci.yml",
+  target_path = ".github/workflows/ci.yml",
+  repos = repos,
+  commit_message = "Standardize CI workflow"
+)
+
+# View deployment results
+print(results)
+```
+
+### Creating Pull Requests
+
+For changes that require review, you can create pull requests:
+
+```{r}
+#| label: file-mapping-and-pull-requests
+#| eval: FALSE
+# Create a mapping of files to deploy
+mapping <- file_mapping(
+  "templates/ci.yml" = ".github/workflows/ci.yml",
+  "templates/lint.R" = ".lintr",
+  "templates/codeowners" = ".github/CODEOWNERS"
+)
+
+# Create pull requests with these changes
+pr_results <- pr_create(
+  repos = repos,
+  branch_name = "feature/standardize-configs",
+  title = "Standardize repository configurations",
+  body = "This PR updates CI workflows, linting settings, and CODEOWNERS file to match organization standards.",
+  file_mapping = mapping
+)
+
+# View PR creation results
+print(pr_results)
+```
+
+## Advanced Use Cases
+
+### Deploying Files with Directory Structure
+
+You can deploy all files from a directory while preserving their structure:
+
+```{r}
+#| label: dir-mapping
+#| eval: FALSE
+# Create mapping from a directory
+workflow_mapping <- file_mapping(
+  dir = "templates/workflows",
+  pattern = "\\.ya?ml$",
+  target_prefix = ".github/workflows/",
+  preserve_structure = TRUE
+)
+
+# Use this mapping to create PRs
+pr_create(
+  repos = repos,
+  branch_name = "feature/update-workflows",
+  title = "Update all workflow files",
+  body = "Standardize all GitHub Actions workflow files",
+  file_mapping = workflow_mapping
+)
+```
+
+### Dry Run Mode
+
+Before making actual changes, you can preview them using dry run mode:
+
+```{r}
+#| label: dry-run
+#| eval: FALSE
+# Preview file deployment without making changes
+dry_results <- file_deploy(
+  source_file = "templates/ci.yml",
+  target_path = ".github/workflows/ci.yml",
+  repos = repos,
+  dry_run = TRUE
+)
+
+# View what would happen
+print(dry_results)
+```
+
+### Filtering and Targeting Repositories
+
+You can combine repository filtering with deployment to target specific subsets of repositories:
+
+```{r targeting}
+#| label: target-repos
+#| eval: FALSE
+# Get all organization repositories
+all_repos <- repos("orgname")
+
+# Filter to only Java repositories
+r_repos <- all_repos[grepl("r", all_repos$name), ]
+
+# Deploy R-specific configuration
+file_deploy(
+  source_file = "templates/R/.Rbuildignore",
+  target_path = ".Rbuildignore",
+  repos = r_repos
+)
+
+# Filter to only Python repositories
+python_repos <- all_repos[grepl("python", all_repos$name), ]
+
+# Deploy Python-specific configuration
+file_deploy(
+  source_file = "templates/python/pylintrc",
+  target_path = ".pylintrc",
+  repos = python_repos
+)
+```
+
+## Recommendations
+
+If you're deploying files across multiple repositories, we recommend taking
+into consideration the following:
+
+1. **Start with dry runs**: Always use `dry_run = TRUE` first to preview changes.
+
+2. **Use meaningful commit messages**: Include context about why the change is
+  being made.
+
+3. **Consider PR approach for significant changes**: Use `pr_create()` instead
+  of direct commits for changes that might need review.
+
+4. **Store templates in version control**: Keep your template files in their own
+  repository.
+
+5. **Create a deployment script**: For regular deployments, create an R script
+  that can be run repeatedly.
+
+## Deployment Script Example
+
+Regarding the last recommendation, you can create a deployment script that
+automates the process of updating files across multiple repositories. Here's an
+example script that updates CI/CD workflows and deploys configuration files to
+all repositories in an organization:
+
+```{r}
+#| label: deployment-script
+#| eval: FALSE
+library(multideploy)
+
+# Get repositories
+api_repos <- repos("my-organization", filter_regex = "^api-")
+service_repos <- repos("my-organization", filter_regex = "^service-")
+all_repos <- rbind(api_repos, service_repos)
+
+# Create file mappings
+workflow_mapping <- file_mapping(
+  dir = "templates/workflows",
+  pattern = "\\.ya?ml$",
+  target_prefix = ".github/workflows/",
+  preserve_structure = TRUE
+)
+
+config_mapping <- file_mapping(
+  "templates/.lintr" = ".lintr",
+  "templates/.editorconfig" = ".editorconfig",
+  "templates/CONTRIBUTING.md" = "CONTRIBUTING.md"
+)
+
+# Create PRs for workflow changes
+pr_create(
+  repos = all_repos,
+  branch_name = "chore/update-workflows",
+  title = "Update CI/CD workflows",
+  body = "Update workflows to organization standards",
+  file_mapping = workflow_mapping,
+  dry_run = FALSE
+)
+```
+
+If you want to deploy the files directly without creating pull requests, you can
+use the following snippet to directly deploy the configuration files:
+
+```{r}
+#| label: deployment-script-custom
+#| eval: FALSE
+# Directly deploy config files
+for (local_file in names(config_mapping)) {
+  target_path <- config_mapping[[local_file]]
+  
+  file_deploy(
+    source_file = local_file,
+    target_path = target_path,
+    repos = all_repos,
+    commit_message = paste("Update", basename(target_path), "to organization standards"),
+    dry_run = FALSE
+  )
+}
+```
+
+# Fin
+
+The `multideploy` package streamlines the process of maintaining consistent 
+files across multiple GitHub repositories. By automating deployment, you can 
+ensure standardization while saving significant time and effort.
