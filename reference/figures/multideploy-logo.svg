@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 400 400">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-family: Arial-BoldMT, Arial;
+        font-size: 11.7px;
+        font-weight: 700;
+        isolation: isolate;
+      }
+
+      .st0, .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        stroke: #a0aec0;
+        stroke-dasharray: 10 5;
+      }
+
+      .st2, .st3 {
+        stroke-width: 4px;
+      }
+
+      .st2, .st4 {
+        fill: none;
+      }
+
+      .st3 {
+        fill: #4299e1;
+      }
+
+      .st3, .st4, .st5 {
+        stroke: #2b6cb0;
+      }
+
+      .st6 {
+        fill: #9ae6b4;
+        stroke-width: 3px;
+      }
+
+      .st6, .st1 {
+        stroke: #38a169;
+      }
+
+      .st4, .st5 {
+        stroke-miterlimit: 3.2;
+        stroke-width: 1.6px;
+      }
+
+      .st7 {
+        fill: #fc8181;
+      }
+
+      .st5 {
+        fill: #ebf4ff;
+      }
+
+      .st1 {
+        stroke-miterlimit: 2.4;
+        stroke-width: .9px;
+      }
+
+      .st8 {
+        fill: #2a3647;
+        stroke: #4a5568;
+        stroke-width: 8px;
+      }
+
+      .st9 {
+        fill: #2b6cb0;
+      }
+    </style>
+  </defs>
+  <polygon class="st8" points="200 10 370 105 370 295 200 390 30 295 30 105 200 10"/>
+  <circle class="st6" cx="135.9" cy="100.7" r="25"/>
+  <circle class="st6" cx="265.9" cy="100.7" r="25"/>
+  <circle class="st6" cx="100.9" cy="200.7" r="25"/>
+  <circle class="st6" cx="300.9" cy="200.7" r="25"/>
+  <circle class="st6" cx="138.2" cy="297.7" r="25"/>
+  <circle class="st6" cx="261.4" cy="299.3" r="25"/>
+  <line class="st2" x1="195.9" y1="175.7" x2="153.1" y2="118.9"/>
+  <line class="st2" x1="205.9" y1="175.7" x2="250.9" y2="120.7"/>
+  <line class="st2" x1="195.9" y1="185.7" x2="125.9" y2="196.4"/>
+  <line class="st2" x1="205.9" y1="185.7" x2="276.6" y2="194.7"/>
+  <line class="st2" x1="195.9" y1="185.7" x2="149.1" y2="279.5"/>
+  <line class="st2" x1="205.9" y1="185.7" x2="249.4" y2="277.5"/>
+  <g>
+    <circle class="st7" cx="167.9" cy="140.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="2s" fill="remove" repeatCount="indefinite" restart="always" values="195.9;153.1"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="2s" fill="remove" repeatCount="indefinite" restart="always" values="175.7;118.9"/>
+    </circle>
+    <circle class="st7" cx="232.9" cy="140.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="1.8s" fill="remove" repeatCount="indefinite" restart="always" values="205.9;250.9"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="1.8s" fill="remove" repeatCount="indefinite" restart="always" values="175.7;120.7"/>
+    </circle>
+    <circle class="st7" cx="150.9" cy="190.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="1.5s" fill="remove" repeatCount="indefinite" restart="always" values="195.9;125.9"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="1.5s" fill="remove" repeatCount="indefinite" restart="always" values="185.7;196.4"/>
+    </circle>
+    <circle class="st7" cx="250.9" cy="190.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="1.7s" fill="remove" repeatCount="indefinite" restart="always" values="205.9;276.6"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="1.7s" fill="remove" repeatCount="indefinite" restart="always" values="185.7;194.7"/>
+    </circle>
+    <circle class="st7" cx="167.9" cy="240.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="2.2s" fill="remove" repeatCount="indefinite" restart="always" values="195.9;149.1"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="2.2s" fill="remove" repeatCount="indefinite" restart="always" values="185.7;279.5"/>
+    </circle>
+    <circle class="st7" cx="232.9" cy="240.7" r="8">
+      <animate accumulate="none" additive="replace" attributeName="cx" calcMode="linear" dur="1.9s" fill="remove" repeatCount="indefinite" restart="always" values="205.9;249.4"/>
+      <animate accumulate="none" additive="replace" attributeName="cy" calcMode="linear" dur="1.9s" fill="remove" repeatCount="indefinite" restart="always" values="185.7;277.5"/>
+    </circle>
+  </g>
+  <path class="st1" d="M128.4,96.7h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <path class="st1" d="M258.9,96.7h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <path class="st1" d="M93.4,194.7h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <path class="st1" d="M293.4,194.7h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <path class="st1" d="M130.7,291.7h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <path class="st1" d="M253.9,293.3h6l1.8,1.8h7.2v10.2h-15v-12Z"/>
+  <circle class="st3" cx="200.9" cy="180.7" r="50"/>
+  <text class="st0" transform="translate(171.1 210.5)"><tspan x="0" y="0">multideploy</tspan></text>
+  <g>
+    <path class="st5" d="M192.9,167h16l8,8v24h-32v-32h8Z"/>
+    <path class="st9" d="M208.9,167v8h8l-8-8Z"/>
+    <line class="st4" x1="192.9" y1="179" x2="208.9" y2="179"/>
+    <line class="st4" x1="192.9" y1="187" x2="208.9" y2="187"/>
+  </g>
+</svg>
