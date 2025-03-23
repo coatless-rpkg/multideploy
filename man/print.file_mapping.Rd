@@ -7,15 +7,36 @@
 \method{print}{file_mapping}(x, max_files = 20, ...)
 }
 \arguments{
-\item{x}{A file_mapping object to print}
+\item{x}{An object of class \code{"file_mapping"} as returned by \code{file_mapping()}}
 
 \item{max_files}{Maximum number of files to display. Default is 20.}
 
-\item{...}{Additional arguments passed to print methods (not used)}
+\item{...}{Additional arguments passed to other print methods (not used)}
 }
 \value{
-Invisibly returns the file_mapping object
+Invisibly returns the original \code{file_mapping} object unchanged, allowing for
+chained operations.
+
+Displays a formatted representation of the mapping to the console, including:
+\itemize{
+\item Total count of mapped files
+\item Visual indicators showing which local files exist (checkmark) or are missing (x)
+\item Source-to-target mapping for each file (limited by \code{max_files})
+}
 }
 \description{
-Print method for file_mapping objects
+This method provides a formatted display of file mappings, showing the relationship between
+local files and their target repository paths with visual indicators for file existence.
+}
+\examples{
+# Create and display a mapping
+mapping <- file_mapping(
+  "R/functions.R" = "R/utils.R",
+  dir = system.file(package = "multideploy")
+)
+# The mapping is automatically printed when not assigned
+
+# Control how many files are displayed
+mapping <- file_mapping(dir = system.file(package = "multideploy"))
+print(mapping, max_files = 5)  # Show only first 5 mappings
 }

@@ -20,25 +20,51 @@ file_deploy(
 
 \item{target_path}{Character string specifying the path in the repositories where the file should be placed}
 
-\item{repos}{Data frame of repositories as returned by repos()}
+\item{repos}{Data frame of repositories as returned by \code{repos()} function, with at least a \code{full_name} column}
 
-\item{commit_message}{Character string with the commit message. Default uses a standard message.}
+\item{commit_message}{Character string with the commit message. Default automatically generates a message.}
 
 \item{branch}{Character string specifying the branch name. Default is NULL (uses default branch).}
 
 \item{create_if_missing}{Logical indicating whether to create the file if it doesn't exist. Default is TRUE.}
 
-\item{dry_run}{Logical indicating whether to only simulate the changes without actually making them. Default is FALSE.}
+\item{dry_run}{Logical indicating whether to only simulate the changes without making actual commits. Default is FALSE.}
+
+\item{quiet}{Logical; if TRUE, suppresses progress and status messages. Default is FALSE.}
 }
 \value{
-A data frame with the results of each deployment
+Returns a \code{data.frame} with class \code{"file_deploy_result"} containing the following columns:
+
+\describe{
+\item{repository}{Character, the full repository name (owner/repo)}
+\item{status}{Character, indicating the operation result with one of these values:
+"created", "updated", "unchanged", "skipped", "error", "would_create", "would_update"}
+\item{message}{Character, a description of the action taken or error encountered}
+}
 }
 \description{
-Deploy a file to multiple GitHub repositories
+This function deploys a local file to multiple GitHub repositories. It can create new files
+or update existing ones, and provides detailed status reporting for each operation.
 }
 \examples{
-\dontrun{
-repositories <- repos("myorg")
-results <- file_deploy("local/path/to/file.R", ".github/workflows/ci.yml", repositories)
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get list of repositories
+repositories <- repos("my-organization")
+
+# Deploy a workflow file to all repositories
+results <- file_deploy(
+  source_file = "local/path/to/workflow.yml",
+  target_path = ".github/workflows/ci.yml",
+  repos = repositories
+)
+
+# Filter to see only successfully updated repositories
+updated <- results[results$status == "updated", ]
+
+# Check for any errors
+errors <- results[results$status == "error", ]
+\dontshow{\}) # examplesIf}
 }
+\seealso{
+\code{\link[=print.file_deploy_result]{print.file_deploy_result()}} for a formatted summary of deployment results.
 }

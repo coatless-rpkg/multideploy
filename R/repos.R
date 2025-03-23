@@ -1,20 +1,40 @@
 #' List repositories for a user or organization
 #'
+#' This function fetches repository information from GitHub for a specified user or organization,
+#' with options to filter and limit the results.
+#'
 #' @param owner Character string specifying the GitHub username or organization name
 #' @param type Character string specifying the type of repositories to list: 
 #'   "all", "owner", "public", "private", or "member". Default is "owner".
 #' @param per_page Number of repositories to return per page. Default is 100.
 #' @param max_pages Maximum number of pages to retrieve. Default is 10.
 #' @param filter_regex Optional regular expression to filter repositories by name
+#' @param quiet Logical; if TRUE, suppresses progress and status messages. Default is FALSE.
 #'
-#' @return A data frame of repositories with their names and other metadata
+#' @return 
+#' Returns a `data.frame` of repositories with the following columns:
+#' 
+#' \describe{
+#'   \item{name}{Character, repository name without owner prefix}
+#'   \item{full_name}{Character, complete repository identifier (owner/repo)}
+#'   \item{default_branch}{Character, the name of the default branch (e.g., "main" or "master")}
+#'   \item{private}{Logical, TRUE if repository is private, FALSE if public}
+#' }
+#'  
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' repositories <- repos("username")
-#' repositories <- repos("orgname", type = "public", filter_regex = "^api-")
-#' }
+#' @examplesIf interactive()
+#' # Get all repositories owned by a user
+#' user_repos <- repos("username")
+#' 
+#' # Get only public repositories for an organization
+#' org_public_repos <- repos("orgname", type = "public")
+#' 
+#' # Filter repositories by name pattern
+#' api_repos <- repos("orgname", filter_regex = "^api-")
+#' 
+#' # Limit the number of fetched repositories
+#' limited_repos <- repos("large-org", per_page = 50, max_pages = 2)
 repos <- function(owner, type = "owner", per_page = 100, 
                   max_pages = 10, filter_regex = NULL, quiet = FALSE) {
   repo_list <- list()

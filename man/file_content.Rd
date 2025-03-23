@@ -4,23 +4,43 @@
 \alias{file_content}
 \title{Retrieve the content of a file from a GitHub repository}
 \usage{
-file_content(repo, path, ref = NULL, quiet = FALSE)
+file_content(repo, path, ref = NULL)
 }
 \arguments{
-\item{repo}{Character string specifying the full name of the repository (owner/repo)}
+\item{repo}{Character string specifying the full name of the repository (format: "owner/repo")}
 
-\item{path}{Character string specifying the path to the file}
+\item{path}{Character string specifying the path to the file within the repository}
 
-\item{ref}{Character string specifying the branch name or commit SHA. Default is NULL.}
+\item{ref}{Character string specifying the branch name, tag, or commit SHA. Default is NULL (uses default branch).}
 }
 \value{
-List with the content and SHA of the file if it exists, NULL otherwise
+When successful, returns a \code{list} with two elements:
+
+\describe{
+\item{content}{Character string containing the decoded file content}
+\item{sha}{Character string with the file's blob SHA for use in update operations}
+}
+
+When the file cannot be retrieved (e.g., does not exist or no access), returns \code{NULL}.
 }
 \description{
-Retrieve the content of a file from a GitHub repository
+This function fetches a file from a GitHub repository and returns its content and SHA.
+If the file cannot be retrieved, it returns NULL and optionally displays a warning message.
 }
 \examples{
-\dontrun{
-file_info <- file_content("username/repo", "path/to/file.R")
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get content from default branch
+file_info <- file_content("username/repository", "path/to/file.R")
+if (!is.null(file_info)) {
+  # Access the content and SHA
+  content <- file_info$content
+  sha <- file_info$sha
 }
+
+# Get content from specific branch
+file_info <- file_content("username/repository", "path/to/file.R", ref = "develop")
+
+# Suppress warnings
+file_info <- file_content("username/repository", "path/to/file.R")
+\dontshow{\}) # examplesIf}
 }

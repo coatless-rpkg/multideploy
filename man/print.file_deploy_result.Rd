@@ -2,24 +2,33 @@
 % Please edit documentation in R/file.R
 \name{print.file_deploy_result}
 \alias{print.file_deploy_result}
-\title{Print method for file_deploy_result objects}
+\title{Print method for \code{"file_deploy_result"} objects}
 \usage{
 \method{print}{file_deploy_result}(x, ...)
 }
 \arguments{
-\item{x}{The file_deploy_result object to print}
+\item{x}{An object of class \code{"file_deploy_result"} as returned by \code{file_deploy()}}
 
-\item{...}{Additional arguments to pass to print methods}
+\item{...}{Additional arguments passed to other print methods (not used)}
 }
 \value{
-Invisibly returns the input data frame
+Invisibly returns the original input data frame unchanged.
+
+Displays a formatted summary of deployment results to the console.
 }
 \description{
-Print method for file_deploy_result objects
+This method provides a formatted summary of file deployment results,
+showing counts by status and details for any errors encountered.
 }
 \examples{
-\dontrun{
-results <- file_deploy("local/file.R", "remote/file.R", repos)
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get list of repositories
+repositories <- repos("my-organization")
+
+# Deploy files
+results <- file_deploy("local/file.R", "remote/file.R", repositories)
+
+# Explicitly print the summary
 print(results)
-}
+\dontshow{\}) # examplesIf}
 }

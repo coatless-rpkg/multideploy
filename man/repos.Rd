@@ -24,16 +24,35 @@ repos(
 \item{max_pages}{Maximum number of pages to retrieve. Default is 10.}
 
 \item{filter_regex}{Optional regular expression to filter repositories by name}
+
+\item{quiet}{Logical; if TRUE, suppresses progress and status messages. Default is FALSE.}
 }
 \value{
-A data frame of repositories with their names and other metadata
+Returns a \code{data.frame} of repositories with the following columns:
+
+\describe{
+\item{name}{Character, repository name without owner prefix}
+\item{full_name}{Character, complete repository identifier (owner/repo)}
+\item{default_branch}{Character, the name of the default branch (e.g., "main" or "master")}
+\item{private}{Logical, TRUE if repository is private, FALSE if public}
+}
 }
 \description{
-List repositories for a user or organization
+This function fetches repository information from GitHub for a specified user or organization,
+with options to filter and limit the results.
 }
 \examples{
-\dontrun{
-repositories <- repos("username")
-repositories <- repos("orgname", type = "public", filter_regex = "^api-")
-}
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get all repositories owned by a user
+user_repos <- repos("username")
+
+# Get only public repositories for an organization
+org_public_repos <- repos("orgname", type = "public")
+
+# Filter repositories by name pattern
+api_repos <- repos("orgname", filter_regex = "^api-")
+
+# Limit the number of fetched repositories
+limited_repos <- repos("large-org", per_page = 50, max_pages = 2)
+\dontshow{\}) # examplesIf}
 }

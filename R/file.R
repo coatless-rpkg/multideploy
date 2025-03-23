@@ -1,17 +1,39 @@
 #' Retrieve the content of a file from a GitHub repository
 #'
-#' @param repo Character string specifying the full name of the repository (owner/repo)
-#' @param path Character string specifying the path to the file
-#' @param ref Character string specifying the branch name or commit SHA. Default is NULL.
+#' This function fetches a file from a GitHub repository and returns its content and SHA.
+#' If the file cannot be retrieved, it returns NULL and optionally displays a warning message.
 #'
-#' @return List with the content and SHA of the file if it exists, NULL otherwise
+#' @param repo Character string specifying the full name of the repository (format: "owner/repo")
+#' @param path Character string specifying the path to the file within the repository
+#' @param ref Character string specifying the branch name, tag, or commit SHA. Default is NULL (uses default branch).
+#'
+#' @return 
+#' When successful, returns a `list` with two elements:
+#' 
+#' \describe{
+#'   \item{content}{Character string containing the decoded file content}
+#'   \item{sha}{Character string with the file's blob SHA for use in update operations}
+#' }
+#' 
+#' When the file cannot be retrieved (e.g., does not exist or no access), returns `NULL`.
+#'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' file_info <- file_content("username/repo", "path/to/file.R")
+#' @examplesIf interactive()
+#' # Get content from default branch
+#' file_info <- file_content("username/repository", "path/to/file.R")
+#' if (!is.null(file_info)) {
+#'   # Access the content and SHA
+#'   content <- file_info$content
+#'   sha <- file_info$sha
 #' }
-file_content <- function(repo, path, ref = NULL, quiet = FALSE) {
+#'
+#' # Get content from specific branch
+#' file_info <- file_content("username/repository", "path/to/file.R", ref = "develop")
+#'
+#' # Suppress warnings
+#' file_info <- file_content("username/repository", "path/to/file.R")
+file_content <- function(repo, path, ref = NULL) {
   tryCatch({
     query <- list(path = path)
     if (!is.null(ref)) {
@@ -33,28 +55,62 @@ file_content <- function(repo, path, ref = NULL, quiet = FALSE) {
       return(NULL)
     }
   }, error = function(e) {
-    if (!quiet) {
-      cli::cli_alert_warning("Could not fetch file {.file {path}} from {.val {repo}}: {e$message}")
-    }
+    cli::cli_alert_warning("Could not fetch file {.file {path}} from {.val {repo}}: {e$message}")
     return(NULL)
   })
 }
 
 #' Create or update a file in a GitHub repository
 #'
-#' @param repo Character string specifying the full name of the repository (owner/repo)
-#' @param path Character string specifying the path to the file
+#' This function creates a new file or updates an existing file in a GitHub repository.
+#' For updating existing files, the SHA of the current file must be provided.
+#'
+#' @param repo Character string specifying the full name of the repository (format: "owner/repo")
+#' @param path Character string specifying the path to the file within the repository
 #' @param content Character string with the new content of the file
 #' @param message Character string with the commit message
 #' @param branch Character string specifying the branch name. Default is NULL (uses default branch).
-#' @param sha Character string with the blob SHA of the file being replaced (required for updates). Default is NULL.
+#' @param sha Character string with the blob SHA of the file being replaced. Required for updating
+#'   existing files; omit for creating new files. Default is NULL.
+#' @param quiet Logical; if TRUE, suppresses progress and status messages. Default is FALSE.
 #'
-#' @return A list with the API response or NULL if operation failed
+#' @return 
+#' When successful, returns a `list` containing the GitHub API response with details about the commit,
+#' including:
+#' 
+#' \describe{
+#'   \item{content}{Information about the updated file}
+#'   \item{commit}{Details about the created commit}
+#' }
+#' 
+#' When the operation fails (e.g., permission issues, invalid SHA), returns `NULL`.
+#'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' result <- file_update("username/repo", "path/to/file.R", "new content", "Update file")
+#' @examplesIf interactive()
+#' # Create a new file
+#' result <- file_update(
+#'   repo = "username/repository", 
+#'   path = "path/to/new_file.R", 
+#'   content = "# New R script\n\nprint('Hello world')", 
+#'   message = "Add new script file"
+#' )
+#' # Check if operation was successful
+#' if (!is.null(result)) {
+#'   # Access commit information
+#'   commit_sha <- result$commit$sha
+#' }
+#'
+#' # Update an existing file (requires SHA)
+#' file_info <- file_content("username/repository", "path/to/existing_file.R")
+#' if (!is.null(file_info)) {
+#'   result <- file_update(
+#'     repo = "username/repository", 
+#'     path = "path/to/existing_file.R", 
+#'     content = "# Updated content\n\nprint('Hello updated world')", 
+#'     message = "Update file content",
+#'     sha = file_info$sha
+#'   )
 #' }
 file_update <- function(repo, path, content, message, branch = NULL, sha = NULL, quiet = FALSE) {
   tryCatch({
@@ -84,7 +140,6 @@ file_update <- function(repo, path, content, message, branch = NULL, sha = NULL,
       ),
       query
     ))
-    
     if (!quiet) {
       if (operation == "create") {
         cli::cli_alert_success("Created file {.file {path}} in {.val {repo}}")
@@ -97,31 +152,55 @@ file_update <- function(repo, path, content, message, branch = NULL, sha = NULL,
     
   }, error = function(e) {
     operation_name <- ifelse(is.null(sha), "creating", "updating")
-    if (!quiet) {
-      cli::cli_alert_danger("Error {operation_name} file {.file {path}} in {.val {repo}}: {e$message}")
-    }
+    cli::cli_alert_danger("Error {operation_name} file {.file {path}} in {.val {repo}}: {e$message}")
     return(NULL)
   })
 }
 
 #' Deploy a file to multiple GitHub repositories
 #'
+#' This function deploys a local file to multiple GitHub repositories. It can create new files
+#' or update existing ones, and provides detailed status reporting for each operation.
+#'
 #' @param source_file Character string specifying the local file path to deploy
 #' @param target_path Character string specifying the path in the repositories where the file should be placed
-#' @param repos Data frame of repositories as returned by repos()
-#' @param commit_message Character string with the commit message. Default uses a standard message.
+#' @param repos Data frame of repositories as returned by `repos()` function, with at least a `full_name` column
+#' @param commit_message Character string with the commit message. Default automatically generates a message.
 #' @param branch Character string specifying the branch name. Default is NULL (uses default branch).
 #' @param create_if_missing Logical indicating whether to create the file if it doesn't exist. Default is TRUE.
-#' @param dry_run Logical indicating whether to only simulate the changes without actually making them. Default is FALSE.
+#' @param dry_run Logical indicating whether to only simulate the changes without making actual commits. Default is FALSE.
+#' @param quiet Logical; if TRUE, suppresses progress and status messages. Default is FALSE.
 #'
-#' @return A data frame with the results of each deployment
+#' @return 
+#' Returns a `data.frame` with class `"file_deploy_result"` containing the following columns:
+#' 
+#' \describe{
+#'   \item{repository}{Character, the full repository name (owner/repo)}
+#'   \item{status}{Character, indicating the operation result with one of these values:
+#'     "created", "updated", "unchanged", "skipped", "error", "would_create", "would_update"}
+#'   \item{message}{Character, a description of the action taken or error encountered}
+#' }
+#' 
+#' @seealso [`print.file_deploy_result()`] for a formatted summary of deployment results.
+#'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' repositories <- repos("myorg")
-#' results <- file_deploy("local/path/to/file.R", ".github/workflows/ci.yml", repositories)
-#' }
+#' @examplesIf interactive()
+#' # Get list of repositories
+#' repositories <- repos("my-organization")
+#'
+#' # Deploy a workflow file to all repositories
+#' results <- file_deploy(
+#'   source_file = "local/path/to/workflow.yml",
+#'   target_path = ".github/workflows/ci.yml",
+#'   repos = repositories
+#' )
+#' 
+#' # Filter to see only successfully updated repositories
+#' updated <- results[results$status == "updated", ]
+#' 
+#' # Check for any errors
+#' errors <- results[results$status == "error", ]
 file_deploy <- function(source_file, target_path, repos, 
                         commit_message = NULL, branch = NULL, 
                         create_if_missing = TRUE, dry_run = FALSE, quiet = FALSE) {
@@ -134,7 +213,7 @@ file_deploy <- function(source_file, target_path, repos,
   file_content <- readChar(source_file, file.info(source_file)$size)
   
   if (is.null(commit_message)) {
-    commit_message <- sprintf("Update %s via multi.gh automated deployment", target_path)
+    commit_message <- sprintf("Update %s via multideploy automated deployment", target_path)
   }
   
   # Initialize results data frame
@@ -215,19 +294,30 @@ file_deploy <- function(source_file, target_path, repos,
   return(results)
 }
 
-#' Print method for file_deploy_result objects
+#' Print method for `"file_deploy_result"` objects
 #'
-#' @param x The file_deploy_result object to print
-#' @param ... Additional arguments to pass to print methods
+#' This method provides a formatted summary of file deployment results,
+#' showing counts by status and details for any errors encountered.
 #'
-#' @return Invisibly returns the input data frame
+#' @param x An object of class `"file_deploy_result"` as returned by `file_deploy()`
+#' @param ... Additional arguments passed to other print methods (not used)
+#'
+#' @return 
+#' Invisibly returns the original input data frame unchanged.
+#' 
+#' Displays a formatted summary of deployment results to the console.
+#'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' results <- file_deploy("local/file.R", "remote/file.R", repos)
+#' @examplesIf interactive()
+#' # Get list of repositories
+#' repositories <- repos("my-organization")
+#' 
+#' # Deploy files
+#' results <- file_deploy("local/file.R", "remote/file.R", repositories)
+#' 
+#' # Explicitly print the summary
 #' print(results)
-#' }
 print.file_deploy_result <- function(x, ...) {
   # Summary
   status_counts <- table(x$status)

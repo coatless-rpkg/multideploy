@@ -17,7 +17,8 @@ pr_create(
 )
 }
 \arguments{
-\item{repos}{Data frame of repositories as returned by repos()}
+\item{repos}{Data frame of repositories as returned by \code{repos()}, with at least
+columns for \code{full_name} and \code{default_branch}}
 
 \item{branch_name}{Character string with the name of the branch to create for the changes}
 
@@ -29,23 +30,38 @@ pr_create(
 
 \item{create_branch}{Logical indicating whether to create the branch if it doesn't exist. Default is TRUE.}
 
-\item{file_mapping}{List mapping local file paths to repository paths, as created by file_mapping()}
+\item{file_mapping}{List mapping local file paths to repository paths, as created by \code{file_mapping()}}
 
 \item{dry_run}{Logical indicating whether to only simulate the changes. Default is FALSE.}
+
+\item{quiet}{Logical; if TRUE, suppresses progress and status messages. Default is FALSE.}
 }
 \value{
-A data frame with the results of each PR creation
+Returns a \code{data.frame} with class \code{"pr_create_result"} containing the following columns:
+
+\describe{
+\item{repository}{Character, the full repository name (owner/repo)}
+\item{pr_url}{Character, the URL of the created pull request, or NA if no PR was created}
+\item{status}{Character, indicating the operation result: "created", "would_create",
+"skipped", or "error"}
+\item{message}{Character, a description of the action taken or error encountered}
+}
 }
 \description{
-Create a pull request for changes in multiple repositories
+This function creates pull requests across multiple GitHub repositories, applying
+the same set of file changes to each repository. It can create new branches as needed,
+add or update files, and then open pull requests.
 }
 \examples{
-\dontrun{
-repositories <- repos("myorg")
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get repositories and create file mapping
+repositories <- repos("my-organization")
 mapping <- file_mapping(
   "local/path/file1.R" = ".github/workflows/ci.yml",
   "local/path/file2.R" = "R/utils.R"
 )
+
+# Create pull requests in all repositories
 results <- pr_create(
   repos = repositories, 
   branch_name = "feature-branch", 
@@ -53,5 +69,28 @@ results <- pr_create(
   body = "Standardizing CI workflow across repositories", 
   file_mapping = mapping
 )
+
+# Simulate without making actual changes
+dry_run_results <- pr_create(
+  repos = repositories, 
+  branch_name = "feature-branch", 
+  title = "Update documentation", 
+  body = "Updating documentation with new examples", 
+  file_mapping = mapping,
+  dry_run = TRUE
+)
+
+# Only create PRs in repositories where the branch already exists
+existing_branch_results <- pr_create(
+  repos = repositories, 
+  branch_name = "existing-branch", 
+  title = "Fix existing branch", 
+  body = "Apply fixes to existing branch", 
+  file_mapping = mapping,
+  create_branch = FALSE
+)
+\dontshow{\}) # examplesIf}
 }
+\seealso{
+\code{\link[=print.pr_create_result]{print.pr_create_result()}} to display the results in a formatted way.
 }

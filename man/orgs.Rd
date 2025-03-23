@@ -10,15 +10,32 @@ orgs(per_page = 100, max_pages = 5, quiet = FALSE)
 \item{per_page}{Number of organizations to return per page. Default is 100.}
 
 \item{max_pages}{Maximum number of pages to retrieve. Default is 5.}
+
+\item{quiet}{Logical; if TRUE, suppresses progress and status messages. Default is FALSE.}
 }
 \value{
-A data frame of organizations with their login names
+Returns a \code{data.frame} of organizations with the following columns:
+
+\describe{
+\item{login}{Character, the organization's username/login name}
+\item{url}{Character, the API URL for the organization}
+}
+
+The \code{data.frame} is ordered as returned by the GitHub API (typically alphabetically).
 }
 \description{
-List organizations for the authenticated user
+This function retrieves all organizations associated with the currently authenticated
+GitHub user, with options to control pagination.
 }
 \examples{
-\dontrun{
-organizations <- orgs()
-}
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Get all organizations for the authenticated user
+my_orgs <- orgs()
+
+# Retrieve silently without progress messages
+my_orgs <- orgs(quiet = TRUE)
+
+# Extract just the organization names
+org_names <- orgs()$login
+\dontshow{\}) # examplesIf}
 }

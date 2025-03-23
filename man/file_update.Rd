@@ -15,9 +15,9 @@ file_update(
 )
 }
 \arguments{
-\item{repo}{Character string specifying the full name of the repository (owner/repo)}
+\item{repo}{Character string specifying the full name of the repository (format: "owner/repo")}
 
-\item{path}{Character string specifying the path to the file}
+\item{path}{Character string specifying the path to the file within the repository}
 
 \item{content}{Character string with the new content of the file}
 
@@ -25,16 +25,51 @@ file_update(
 
 \item{branch}{Character string specifying the branch name. Default is NULL (uses default branch).}
 
-\item{sha}{Character string with the blob SHA of the file being replaced (required for updates). Default is NULL.}
+\item{sha}{Character string with the blob SHA of the file being replaced. Required for updating
+existing files; omit for creating new files. Default is NULL.}
+
+\item{quiet}{Logical; if TRUE, suppresses progress and status messages. Default is FALSE.}
 }
 \value{
-A list with the API response or NULL if operation failed
+When successful, returns a \code{list} containing the GitHub API response with details about the commit,
+including:
+
+\describe{
+\item{content}{Information about the updated file}
+\item{commit}{Details about the created commit}
+}
+
+When the operation fails (e.g., permission issues, invalid SHA), returns \code{NULL}.
 }
 \description{
-Create or update a file in a GitHub repository
+This function creates a new file or updates an existing file in a GitHub repository.
+For updating existing files, the SHA of the current file must be provided.
 }
 \examples{
-\dontrun{
-result <- file_update("username/repo", "path/to/file.R", "new content", "Update file")
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Create a new file
+result <- file_update(
+  repo = "username/repository", 
+  path = "path/to/new_file.R", 
+  content = "# New R script\n\nprint('Hello world')", 
+  message = "Add new script file"
+)
+# Check if operation was successful
+if (!is.null(result)) {
+  # Access commit information
+  commit_sha <- result$commit$sha
 }
+
+# Update an existing file (requires SHA)
+file_info <- file_content("username/repository", "path/to/existing_file.R")
+if (!is.null(file_info)) {
+  result <- file_update(
+    repo = "username/repository", 
+    path = "path/to/existing_file.R", 
+    content = "# Updated content\n\nprint('Hello updated world')", 
+    message = "Update file content",
+    sha = file_info$sha
+  )
+}
+\dontshow{\}) # examplesIf}
 }

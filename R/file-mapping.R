@@ -1,35 +1,59 @@
 #' Create a file mapping for multi-repository deployment
 #'
+#' This function builds a mapping between local files and their target paths in repositories,
+#' supporting both individual file mapping and bulk directory processing.
+#'
 #' @param ... Named arguments where names are local file paths and values are repository paths
 #' @param dir Character string specifying a directory to search for files. Default is NULL.
 #' @param pattern Character string with a regular expression pattern to match files in dir. Default is NULL.
 #' @param target_prefix Character string to prefix to all target paths. Default is "".
 #' @param preserve_structure Logical indicating whether to preserve directory structure in target. Default is FALSE.
+#' @param quiet Logical; if TRUE, suppresses information messages. Default is FALSE.
 #'
-#' @return A named list where names are local file paths and values are repository paths
+#' @return 
+#' Returns an object of class `"file_mapping"` (which is just a marked up `"list"`) containing:
+#' 
+#' - A named list where each entry maps a local file path (name) to a target repository path (value)
+#' - Each key is the full path to a local file
+#' - Each value is the corresponding path where the file should be placed in repositories
+#'
+#' @seealso [`print.file_mapping()`] to display the mapping in a formatted way.
+#' 
+#' @details
+#' The `dir` argument requires a valid directory path currently on the local filesystem.
+#' This directory is scanned for files matching the `pattern` regular expression,
+#' and each file is mapped to a target path in repositories. If the directory is
+#' not found, an error is thrown.
+#' 
+#' 
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # Individual files
+#' # Map individual files with explicit source-to-target paths
 #' mapping <- file_mapping(
 #'   "local/path/ci.yml" = ".github/workflows/ci.yml",
 #'   "local/path/lint.R" = ".lintr"
 #' )
 #'
-#' # All yaml files from a directory to .github/workflows
-#' mapping <- file_mapping(
-#'   dir = "local/workflows",
-#'   pattern = "\\.ya?ml$",
-#'   target_prefix = ".github/workflows/"
+#' # Automatically map all R files from a directory to backup/R2/
+#' workflow_mapping <- file_mapping(
+#'   dir = system.file(package = "multideploy"),
+#'   pattern = "\\.R$",
+#'   target_prefix = "backup/R2/"
 #' )
 #'
-#' # Preserve directory structure
-#' mapping <- file_mapping(
-#'   dir = "templates",
+#' # Preserve directory structure when mapping files
+#' template_mapping <- file_mapping(
+#'   dir = system.file(package = "multideploy"),
 #'   preserve_structure = TRUE
 #' )
-#' }
+#'
+#' # Combine explicit mappings with directory-based mappings
+#' combined_mapping <- file_mapping(
+#'   "specific/file.R" = "R/functions.R",
+#'   dir = system.file(package = "multideploy"),
+#'   target_prefix = ".github/"
+#' )
 file_mapping <- function(..., dir = NULL, pattern = NULL, 
                          target_prefix = "", preserve_structure = FALSE, quiet = FALSE) {
   mapping <- list(...)
@@ -79,12 +103,36 @@ file_mapping <- function(..., dir = NULL, pattern = NULL,
 
 #' Print method for file_mapping objects
 #'
-#' @param x A file_mapping object to print
-#' @param max_files Maximum number of files to display. Default is 20.
-#' @param ... Additional arguments passed to print methods (not used)
+#' This method provides a formatted display of file mappings, showing the relationship between
+#' local files and their target repository paths with visual indicators for file existence.
 #'
-#' @return Invisibly returns the file_mapping object
+#' @param x An object of class `"file_mapping"` as returned by `file_mapping()`
+#' @param max_files Maximum number of files to display. Default is 20.
+#' @param ... Additional arguments passed to other print methods (not used)
+#'
+#' @return 
+#' Invisibly returns the original `file_mapping` object unchanged, allowing for
+#' chained operations. 
+#' 
+#' Displays a formatted representation of the mapping to the console, including:
+#' 
+#' - Total count of mapped files
+#' - Visual indicators showing which local files exist (checkmark) or are missing (x)
+#' - Source-to-target mapping for each file (limited by `max_files`)
+#'
 #' @export
+#'
+#' @examples
+#' # Create and display a mapping
+#' mapping <- file_mapping(
+#'   "R/functions.R" = "R/utils.R",
+#'   dir = system.file(package = "multideploy")
+#' )
+#' # The mapping is automatically printed when not assigned
+#'
+#' # Control how many files are displayed
+#' mapping <- file_mapping(dir = system.file(package = "multideploy"))
+#' print(mapping, max_files = 5)  # Show only first 5 mappings
 print.file_mapping <- function(x, max_files = 20, ...) {
   n_files <- length(x)
   

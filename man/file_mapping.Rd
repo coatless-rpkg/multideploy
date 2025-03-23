@@ -23,32 +23,54 @@ file_mapping(
 \item{target_prefix}{Character string to prefix to all target paths. Default is "".}
 
 \item{preserve_structure}{Logical indicating whether to preserve directory structure in target. Default is FALSE.}
+
+\item{quiet}{Logical; if TRUE, suppresses information messages. Default is FALSE.}
 }
 \value{
-A named list where names are local file paths and values are repository paths
+Returns an object of class \code{"file_mapping"} (which is just a marked up \code{"list"}) containing:
+\itemize{
+\item A named list where each entry maps a local file path (name) to a target repository path (value)
+\item Each key is the full path to a local file
+\item Each value is the corresponding path where the file should be placed in repositories
+}
 }
 \description{
-Create a file mapping for multi-repository deployment
+This function builds a mapping between local files and their target paths in repositories,
+supporting both individual file mapping and bulk directory processing.
+}
+\details{
+The \code{dir} argument requires a valid directory path currently on the local filesystem.
+This directory is scanned for files matching the \code{pattern} regular expression,
+and each file is mapped to a target path in repositories. If the directory is
+not found, an error is thrown.
 }
 \examples{
-\dontrun{
-# Individual files
+# Map individual files with explicit source-to-target paths
 mapping <- file_mapping(
   "local/path/ci.yml" = ".github/workflows/ci.yml",
   "local/path/lint.R" = ".lintr"
 )
 
-# All yaml files from a directory to .github/workflows
-mapping <- file_mapping(
-  dir = "local/workflows",
-  pattern = "\\\\.ya?ml$",
-  target_prefix = ".github/workflows/"
+# Automatically map all R files from a directory to backup/R2/
+workflow_mapping <- file_mapping(
+  dir = system.file(package = "multideploy"),
+  pattern = "\\\\.R$",
+  target_prefix = "backup/R2/"
 )
 
-# Preserve directory structure
-mapping <- file_mapping(
-  dir = "templates",
+# Preserve directory structure when mapping files
+template_mapping <- file_mapping(
+  dir = system.file(package = "multideploy"),
   preserve_structure = TRUE
 )
+
+# Combine explicit mappings with directory-based mappings
+combined_mapping <- file_mapping(
+  "specific/file.R" = "R/functions.R",
+  dir = system.file(package = "multideploy"),
+  target_prefix = ".github/"
+)
 }
+\seealso{
+\code{\link[=print.file_mapping]{print.file_mapping()}} to display the mapping in a formatted way.
 }

@@ -1,15 +1,33 @@
 #' List organizations for the authenticated user
 #'
+#' This function retrieves all organizations associated with the currently authenticated
+#' GitHub user, with options to control pagination.
+#'
 #' @param per_page Number of organizations to return per page. Default is 100.
 #' @param max_pages Maximum number of pages to retrieve. Default is 5.
+#' @param quiet Logical; if TRUE, suppresses progress and status messages. Default is FALSE.
 #'
-#' @return A data frame of organizations with their login names
+#' @return 
+#' Returns a `data.frame` of organizations with the following columns:
+#' 
+#' \describe{
+#'   \item{login}{Character, the organization's username/login name}
+#'   \item{url}{Character, the API URL for the organization}
+#' }
+#' 
+#' The `data.frame` is ordered as returned by the GitHub API (typically alphabetically).
+#'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' organizations <- orgs()
-#' }
+#' @examplesIf interactive()
+#' # Get all organizations for the authenticated user
+#' my_orgs <- orgs()
+#' 
+#' # Retrieve silently without progress messages
+#' my_orgs <- orgs(quiet = TRUE)
+#' 
+#' # Extract just the organization names
+#' org_names <- orgs()$login
 orgs <- function(per_page = 100, max_pages = 5, quiet = FALSE) {
   org_list <- list()
   page <- 1
@@ -23,7 +41,9 @@ orgs <- function(per_page = 100, max_pages = 5, quiet = FALSE) {
                      per_page = per_page,
                      page = page)
     
-    cli::cli_progress_update()
+    if (!quiet) {
+      cli::cli_progress_update()
+    }
     
     if (length(result) == 0) {
       break
