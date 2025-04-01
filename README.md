@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# multideploy <img src="man/figures/multideploy-logo.svg" align="right" height="139" />
+# multideploy <img src="man/figures/multideploy-logo.svg" align="right" width="139" alt="a hex logo for the multideploy R package" />
 
 <!-- badges: start -->
 
@@ -36,8 +36,12 @@ sure you have a GitHub Personal Access Token (PAT) set up:
 Sys.setenv(GITHUB_PAT = askpass::askpass("What is your GitHub Personal Access Token (PAT)?"))
 ```
 
-It’s recommended to store your PAT in your `.Renviron` file rather than
-in your code.
+For regular use, it’s recommended to add your PAT to the git credential
+system through the `gitcreds` package:
+
+``` r
+gitcreds::gitcreds_set()
+```
 
 ## Quick Start Example
 

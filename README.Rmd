@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# multideploy <img src="man/figures/multideploy-logo.svg" align="right" height="139" />
+# multideploy <img src="man/figures/multideploy-logo.svg" align="right" width="139" alt="a hex logo for the multideploy R package" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml)
@@ -27,7 +27,9 @@ The `multideploy` package provides tools for deploying file changes across multi
 
 You can install the development version of `multideploy` from [GitHub](https://github.comcoatless-rpkg/multideploy) with:
 
-```r
+```{r}
+#| label: setup-readme
+#| eval: false
 # install.packages("remotes")
 remotes::install_github("coatless-rpkg/multideploy")
 ```
@@ -38,19 +40,28 @@ remotes::install_github("coatless-rpkg/multideploy")
 GitHub API authentication and querying. Before using `multideploy`, make sure
 you have a GitHub Personal Access Token (PAT) set up:
 
-```r
+```{r}
+#| label: auth-session-readme
+#| eval: false
 # Set GitHub PAT (or use .Renviron)
 Sys.setenv(GITHUB_PAT = askpass::askpass("What is your GitHub Personal Access Token (PAT)?"))
 ```
 
-It's recommended to store your PAT in your `.Renviron` file rather than in your code.
+For regular use, it's recommended to add your PAT to the git credential system
+through the `gitcreds` package:
+
+```{r}
+#| label: auth-credentials-readme
+#| eval: false
+gitcreds::gitcreds_set()
+```
 
 ## Quick Start Example
 
 Here's an example showing how to deploy a standardized CI workflow file to multiple repositories using `multideploy`:
 
 ```{r}
-#| label: quick-example
+#| label: quick-example-readme
 #| eval: false
 library(multideploy)
 
@@ -83,7 +94,7 @@ step through the additional features of the package within this section.
 List and filter repositories across users or organizations:
 
 ```{r}
-#| label: repo-listing
+#| label: repo-listing-readme-demo
 #| eval: false
 # Get all public repositories for a user
 user_repos <- repos("username", type = "public")
@@ -100,7 +111,7 @@ my_orgs <- orgs()
 Deploy individual files or sets of files to multiple repositories:
 
 ```{r}
-#| label: file-deploy
+#| label: file-deploy-readme-demo
 #| eval: false
 # Deploy a single file
 file_deploy("local/path/file.R", "remote/path/file.R", repos)
@@ -129,7 +140,7 @@ pr_create(
 Preview changes before making them:
 
 ```{r}
-#| label: dry-run
+#| label: dry-run-readme-demo
 #| eval: false
 # Preview changes without making them
 file_deploy("local/file.R", "remote/file.R", repos, dry_run = TRUE)
