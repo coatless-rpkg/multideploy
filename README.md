@@ -10,15 +10,15 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The `multideploy` package provides tools for deploying file changes
+The `{multideploy}` package provides tools for deploying file changes
 across multiple GitHub repositories. It’s designed to help you manage
 standardized configurations, CI/CD workflows, and other common files
 that need to be synchronized across multiple repositories.
 
 ## Installation
 
-You can install the development version of `multideploy` from
-[GitHub](https://github.comcoatless-rpkg/multideploy) with:
+You can install the development version of `{multideploy}` from
+[GitHub](https://github.com/coatless-rpkg/multideploy) with:
 
 ``` r
 # install.packages("remotes")
@@ -27,9 +27,9 @@ remotes::install_github("coatless-rpkg/multideploy")
 
 ## Authentication
 
-`multideploy` uses the [`gh`](https://github.com/r-lib/gh) package for
-GitHub API authentication and querying. Before using `multideploy`, make
-sure you have a GitHub Personal Access Token (PAT) set up:
+`{multideploy}` uses the [`gh`](https://github.com/r-lib/gh) package for
+GitHub API authentication and querying. Before using `{multideploy}`,
+make sure you have a GitHub Personal Access Token (PAT) set up:
 
 ``` r
 # Set GitHub PAT (or use .Renviron)
@@ -37,7 +37,8 @@ Sys.setenv(GITHUB_PAT = askpass::askpass("What is your GitHub Personal Access To
 ```
 
 For regular use, it’s recommended to add your PAT to the git credential
-system through the `gitcreds` package:
+system through the [`{gitcreds}`](https://github.com/r-lib/gitcreds)
+package:
 
 ``` r
 gitcreds::gitcreds_set()
@@ -46,7 +47,7 @@ gitcreds::gitcreds_set()
 ## Quick Start Example
 
 Here’s an example showing how to deploy a standardized CI workflow file
-to multiple repositories using `multideploy`:
+to multiple repositories using `{multideploy}`:
 
 ``` r
 library(multideploy)
@@ -73,7 +74,7 @@ print(results)
 ## Extended Overview
 
 If you’re looking for more detailed examples on how to use
-`multideploy`, we step through the additional features of the package
+`{multideploy}`, we step through the additional features of the package
 within this section.
 
 ### Repository Selection
