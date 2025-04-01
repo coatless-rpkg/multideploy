@@ -1,4 +1,56 @@
-url: ~
+url: https://r-pkg.thecoatlessprofessor.com/multideploy/
 template:
   bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
 
+development:
+  mode: auto
+
+home:
+  title: Deploy file changes across multiple GitHub repositories
+  description: >
+    Tools for managing standardized files, configurations, and workflows 
+    across multiple GitHub repositories.
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [github]
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Getting Started
+        href: articles/multideploy.html
+
+reference:
+- title: Repository Management
+  desc: Functions for working with GitHub repositories and organizations
+  contents:
+  - repos
+  - orgs
+
+- title: File Operations
+  desc: Functions for working with files in GitHub repositories
+  contents:
+  - file_content
+  - file_update
+  - file_mapping
+  - print.file_mapping
+  - file_deploy
+  - print.file_deploy_result
+
+- title: Pull Request Creation
+  desc: Functions for creating pull requests across repositories
+  contents:
+  - pr_create
+  - print.pr_create_result
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
