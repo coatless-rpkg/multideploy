@@ -16,11 +16,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">multideploy</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,11 +31,15 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/multideploy.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/multideploy.html">Getting Started</a></li>
+  </ul>
+</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
-</form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/coatless-rpkg/multideploy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
@@ -62,22 +66,23 @@
 <div class="section level3">
 <h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h3>
-<p>The <code>multideploy</code> package provides a streamlined way to
+<p>The <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a> package provides a streamlined way to
 deploy file changes across multiple GitHub repositories. Whether you’re
 managing standardized CI/CD configurations, common utility scripts, code
 style definitions, or any other files that should be consistent across
-repositories, <code>multideploy</code> helps automate this process.</p>
+repositories, <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a> helps automate this
+process.</p>
 <p>This vignette will guide you through the main functionality of the
 package with practical examples.</p>
 </div>
 <div class="section level3">
 <h3 id="setup-and-authentication">Setup and Authentication<a class="anchor" aria-label="anchor" href="#setup-and-authentication"></a>
 </h3>
-<p>First, load the multideploy package:</p>
+<p>First, load the <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/" class="external-link">multideploy</a></span><span class="op">)</span></span></code></pre></div>
-<p>Before using <code>multideploy</code>, you need to authenticate with
-GitHub. The package uses the <a href="https://github.com/r-lib/gh" class="external-link"><code>gh</code></a> package for
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a></span><span class="op">)</span></span></code></pre></div>
+<p>Before using <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a>, you need to authenticate
+with GitHub. The package uses the <a href="https://github.com/r-lib/gh" class="external-link"><code>gh</code></a> package for
 authentication, which looks for a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic" class="external-link">GitHub
 Personal Access Token (PAT)</a> in the <code>GITHUB_PAT</code> or
 <code>GITHUB_TOKEN</code> environment variables. This token can be set
@@ -89,12 +94,6 @@ directly within the R script via:</p>
 credential system through the <code>gitcreds</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">gitcreds</span><span class="fu">::</span><span class="fu"><a href="https://gitcreds.r-lib.org/reference/gitcreds_get.html" class="external-link">gitcreds_set</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Alternatively, you can set the PAT directly in your
-<code>.Renviron</code> file by running:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"~/.Renviron"</span><span class="op">)</span></span></code></pre></div>
-<p>Then, type:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="va">GITHUB_PAT</span><span class="op">=</span>your_github_pat_here</span></code></pre></div>
 <p>Your PAT needs appropriate permissions to access and modify
 repositories. At a minimum, you’ll need:</p>
 <ul>
@@ -113,7 +112,7 @@ workflows</li>
 </h4>
 <p>The <code><a href="../reference/repos.html">repos()</a></code> function allows you to list repositories for
 a user or organization:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># List repositories for a user</span></span>
 <span><span class="va">user_repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"username"</span><span class="op">)</span></span>
 <span></span>
@@ -131,7 +130,7 @@ a user or organization:</p>
 </h4>
 <p>If you’re a member of multiple organizations, you can list them
 with:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_orgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/orgs.html">orgs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_orgs</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -143,7 +142,7 @@ with:</p>
 <h4 id="getting-file-content">Getting File Content<a class="anchor" aria-label="anchor" href="#getting-file-content"></a>
 </h4>
 <p>You can retrieve the content of a file from a GitHub repository:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get content of a file</span></span>
 <span><span class="va">workflow_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/file_content.html">file_content</a></span><span class="op">(</span><span class="st">"username/repo"</span>, <span class="st">".github/workflows/ci.yml"</span><span class="op">)</span></span>
 <span></span>
@@ -154,7 +153,7 @@ with:</p>
 <h4 id="creating-or-updating-files">Creating or Updating Files<a class="anchor" aria-label="anchor" href="#creating-or-updating-files"></a>
 </h4>
 <p>To create or update a file in a repository:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Update a file</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/file_update.html">file_update</a></span><span class="op">(</span></span>
 <span>  repo <span class="op">=</span> <span class="st">"username/repo"</span>,</span>
@@ -167,13 +166,13 @@ with:</p>
 <div class="section level3">
 <h3 id="deploying-files-across-repositories">Deploying Files Across Repositories<a class="anchor" aria-label="anchor" href="#deploying-files-across-repositories"></a>
 </h3>
-<p>The core functionality of <code>multideploy</code> is deploying files
-across multiple repositories. This can be done in two ways:</p>
+<p>The core functionality of <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a> is deploying
+files across multiple repositories. This can be done in two ways:</p>
 <div class="section level4">
 <h4 id="direct-file-deployment">Direct File Deployment<a class="anchor" aria-label="anchor" href="#direct-file-deployment"></a>
 </h4>
 <p>Deploy a single file to multiple repositories:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get repositories</span></span>
 <span><span class="va">repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"orgname"</span>, filter_regex <span class="op">=</span> <span class="st">"^api-"</span><span class="op">)</span></span>
 <span></span>
@@ -192,7 +191,7 @@ across multiple repositories. This can be done in two ways:</p>
 <h4 id="creating-pull-requests">Creating Pull Requests<a class="anchor" aria-label="anchor" href="#creating-pull-requests"></a>
 </h4>
 <p>For changes that require review, you can create pull requests:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a mapping of files to deploy</span></span>
 <span><span class="va">mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/file_mapping.html">file_mapping</a></span><span class="op">(</span></span>
 <span>  <span class="st">"templates/ci.yml"</span> <span class="op">=</span> <span class="st">".github/workflows/ci.yml"</span>,</span>
@@ -221,7 +220,7 @@ across multiple repositories. This can be done in two ways:</p>
 </h4>
 <p>You can deploy all files from a directory while preserving their
 structure:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create mapping from a directory</span></span>
 <span><span class="va">workflow_mapping</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/file_mapping.html">file_mapping</a></span><span class="op">(</span></span>
 <span>  dir <span class="op">=</span> <span class="st">"templates/workflows"</span>,</span>
@@ -244,7 +243,7 @@ structure:</p>
 </h4>
 <p>Before making actual changes, you can preview them using dry run
 mode:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Preview file deployment without making changes</span></span>
 <span><span class="va">dry_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/file_deploy.html">file_deploy</a></span><span class="op">(</span></span>
 <span>  source_file <span class="op">=</span> <span class="st">"templates/ci.yml"</span>,</span>
@@ -261,7 +260,7 @@ mode:</p>
 </h4>
 <p>You can combine repository filtering with deployment to target
 specific subsets of repositories:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get all organization repositories</span></span>
 <span><span class="va">all_repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"orgname"</span><span class="op">)</span></span>
 <span></span>
@@ -312,8 +311,8 @@ deployments, create an R script that can be run repeatedly.</p></li>
 that automates the process of updating files across multiple
 repositories. Here’s an example script that updates CI/CD workflows and
 deploys configuration files to all repositories in an organization:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/" class="external-link">multideploy</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get repositories</span></span>
 <span><span class="va">api_repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"my-organization"</span>, filter_regex <span class="op">=</span> <span class="st">"^api-"</span><span class="op">)</span></span>
@@ -346,7 +345,7 @@ deploys configuration files to all repositories in an organization:</p>
 <p>If you want to deploy the files directly without creating pull
 requests, you can use the following snippet to directly deploy the
 configuration files:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Directly deploy config files</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">local_file</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">config_mapping</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">target_path</span> <span class="op">&lt;-</span> <span class="va">config_mapping</span><span class="op">[[</span><span class="va">local_file</span><span class="op">]</span><span class="op">]</span></span>
@@ -363,7 +362,7 @@ configuration files:</p>
 <div class="section level2">
 <h2 id="fin">Fin<a class="anchor" aria-label="anchor" href="#fin"></a>
 </h2>
-<p>The <code>multideploy</code> package streamlines the process of
+<p>The <a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a> package streamlines the process of
 maintaining consistent files across multiple GitHub repositories. By
 automating deployment, you can ensure standardization while saving
 significant time and effort.</p>

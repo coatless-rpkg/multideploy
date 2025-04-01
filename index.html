@@ -5,24 +5,26 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Deploy File Changes Across Multiple GitHub Repositories • multideploy</title>
+<title>Deploy file changes across multiple GitHub repositories • multideploy</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Deploy File Changes Across Multiple GitHub Repositories">
-<meta name="description" content="Provides functions to deploy file changes across multiple GitHub repositories using the GitHub API. Allows synchronizing common files, CI workflows, or configurations across many repositories with a single command.">
-<meta property="og:description" content="Provides functions to deploy file changes across multiple GitHub repositories using the GitHub API. Allows synchronizing common files, CI workflows, or configurations across many repositories with a single command.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Deploy file changes across multiple GitHub repositories">
+<meta name="description" content="Tools for managing standardized files, configurations, and workflows  across multiple GitHub repositories.
+">
+<meta property="og:description" content="Tools for managing standardized files, configurations, and workflows  across multiple GitHub repositories.
+">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">multideploy</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,11 +35,15 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/multideploy.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/multideploy.html">Getting Started</a></li>
+  </ul>
+</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
-</form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/coatless-rpkg/multideploy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
@@ -47,7 +53,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="multideploy-">multideploy <img src="reference/figures/multideploy-logo.svg" align="right" height="139"><a class="anchor" aria-label="anchor" href="#multideploy-"></a>
+<div class="page-header"><h1 id="multideploy-">multideploy <img src="reference/figures/multideploy-logo.svg" align="right" width="139" alt="a hex logo for the multideploy R package"><a class="anchor" aria-label="anchor" href="#multideploy-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -67,14 +73,16 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set GitHub PAT (or use .Renviron)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>GITHUB_PAT <span class="op">=</span> <span class="fu">askpass</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.r-universe.dev/askpass/reference/askpass.html" class="external-link">askpass</a></span><span class="op">(</span><span class="st">"What is your GitHub Personal Access Token (PAT)?"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>It’s recommended to store your PAT in your <code>.Renviron</code> file rather than in your code.</p>
+<p>For regular use, it’s recommended to add your PAT to the git credential system through the <code>gitcreds</code> package:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">gitcreds</span><span class="fu">::</span><span class="fu"><a href="https://gitcreds.r-lib.org/reference/gitcreds_get.html" class="external-link">gitcreds_set</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start-example">Quick Start Example<a class="anchor" aria-label="anchor" href="#quick-start-example"></a>
 </h2>
 <p>Here’s an example showing how to deploy a standardized CI workflow file to multiple repositories using <code>multideploy</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/" class="external-link">multideploy</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-pkg.thecoatlessprofessor.com/multideploy/">multideploy</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># List repositories in an organization matching a pattern</span></span>
 <span><span class="va">repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"my-organization"</span>, filter_regex <span class="op">=</span> <span class="st">"^api-"</span><span class="op">)</span></span>
@@ -101,7 +109,7 @@
 <h3 id="repository-selection">Repository Selection<a class="anchor" aria-label="anchor" href="#repository-selection"></a>
 </h3>
 <p>List and filter repositories across users or organizations:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get all public repositories for a user</span></span>
 <span><span class="va">user_repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/repos.html">repos</a></span><span class="op">(</span><span class="st">"username"</span>, type <span class="op">=</span> <span class="st">"public"</span><span class="op">)</span></span>
 <span></span>
@@ -115,7 +123,7 @@
 <h3 id="file-deployment">File Deployment<a class="anchor" aria-label="anchor" href="#file-deployment"></a>
 </h3>
 <p>Deploy individual files or sets of files to multiple repositories:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Deploy a single file</span></span>
 <span><span class="fu"><a href="reference/file_deploy.html">file_deploy</a></span><span class="op">(</span><span class="st">"local/path/file.R"</span>, <span class="st">"remote/path/file.R"</span>, <span class="va">repos</span><span class="op">)</span></span>
 <span></span>
@@ -141,7 +149,7 @@
 <h3 id="dry-run-mode">Dry Run Mode<a class="anchor" aria-label="anchor" href="#dry-run-mode"></a>
 </h3>
 <p>Preview changes before making them:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Preview changes without making them</span></span>
 <span><span class="fu"><a href="reference/file_deploy.html">file_deploy</a></span><span class="op">(</span><span class="st">"local/file.R"</span>, <span class="st">"remote/file.R"</span>, <span class="va">repos</span>, dry_run <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -186,13 +194,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/coatless-rpkg/multideploy/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

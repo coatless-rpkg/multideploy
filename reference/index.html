@@ -3,11 +3,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">multideploy</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,9 +17,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/multideploy.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-      </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/coatless-rpkg/multideploy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/multideploy.html">Getting Started</a></li>
+  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
+      </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/coatless-rpkg/multideploy/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -32,9 +35,32 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="repository-management">Repository Management<a class="anchor" aria-label="anchor" href="#repository-management"></a></h2>
+
+      <div class="section-desc"><p>Functions for working with GitHub repositories and organizations</p></div>
 
 
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="repos.html">repos()</a></code>
+
+        </dt>
+        <dd>List repositories for a user or organization</dd>
+      </dl><dl><dt>
+
+          <code><a href="orgs.html">orgs()</a></code>
+
+        </dt>
+        <dd>List organizations for the authenticated user</dd>
+      </dl></div><div class="section level2">
+      <h2 id="file-operations">File Operations<a class="anchor" aria-label="anchor" href="#file-operations"></a></h2>
+
+      <div class="section-desc"><p>Functions for working with files in GitHub repositories</p></div>
 
 
     </div><div class="section level2">
@@ -50,10 +76,10 @@
         <dd>Retrieve the content of a file from a GitHub repository</dd>
       </dl><dl><dt>
 
-          <code><a href="file_deploy.html">file_deploy()</a></code>
+          <code><a href="file_update.html">file_update()</a></code>
 
         </dt>
-        <dd>Deploy a file to multiple GitHub repositories</dd>
+        <dd>Create or update a file in a GitHub repository</dd>
       </dl><dl><dt>
 
           <code><a href="file_mapping.html">file_mapping()</a></code>
@@ -62,17 +88,34 @@
         <dd>Create a file mapping for multi-repository deployment</dd>
       </dl><dl><dt>
 
-          <code><a href="file_update.html">file_update()</a></code>
+          <code><a href="print.file_mapping.html">print(<i>&lt;file_mapping&gt;</i>)</a></code>
 
         </dt>
-        <dd>Create or update a file in a GitHub repository</dd>
+        <dd>Print method for file_mapping objects</dd>
       </dl><dl><dt>
 
-          <code><a href="orgs.html">orgs()</a></code>
+          <code><a href="file_deploy.html">file_deploy()</a></code>
 
         </dt>
-        <dd>List organizations for the authenticated user</dd>
+        <dd>Deploy a file to multiple GitHub repositories</dd>
       </dl><dl><dt>
+
+          <code><a href="print.file_deploy_result.html">print(<i>&lt;file_deploy_result&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Print method for <code>"file_deploy_result"</code> objects</dd>
+      </dl></div><div class="section level2">
+      <h2 id="pull-request-creation">Pull Request Creation<a class="anchor" aria-label="anchor" href="#pull-request-creation"></a></h2>
+
+      <div class="section-desc"><p>Functions for creating pull requests across repositories</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="pr_create.html">pr_create()</a></code>
 
@@ -80,30 +123,13 @@
         <dd>Create a pull request for changes in multiple repositories</dd>
       </dl><dl><dt>
 
-          <code><a href="print.file_deploy_result.html">print(<i>&lt;file_deploy_result&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Print method for <code>"file_deploy_result"</code> objects</dd>
-      </dl><dl><dt>
-
-          <code><a href="print.file_mapping.html">print(<i>&lt;file_mapping&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Print method for file_mapping objects</dd>
-      </dl><dl><dt>
-
           <code><a href="print.pr_create_result.html">print(<i>&lt;pr_create_result&gt;</i>)</a></code>
 
         </dt>
         <dd>Print method for pr_create_result objects</dd>
-      </dl><dl><dt>
-
-          <code><a href="repos.html">repos()</a></code>
-
-        </dt>
-        <dd>List repositories for a user or organization</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
