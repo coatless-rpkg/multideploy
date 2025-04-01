@@ -9,6 +9,15 @@ multiple GitHub repositories using the gh package.}
 \description{
 Provides functions to deploy file changes across multiple GitHub repositories using the GitHub API. Allows synchronizing common files, CI workflows, or configurations across many repositories with a single command.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://r-pkg.thecoatlessprofessor.com/multideploy/}
+  \item \url{https://github.com/coatless-rpkg/multideploy}
+  \item Report bugs at \url{https://github.com/coatless-rpkg/multideploy/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: James Joseph Balamuta \email{james.balamuta@gmail.com} (\href{https://orcid.org/0000-0003-2826-8458}{ORCID})
 
