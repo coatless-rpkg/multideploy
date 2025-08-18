@@ -8,9 +8,9 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-2826-8458")
     )
   )
-Description: Deploy file changes across multiple GitHub 
-    repositories using the 'GitHub' 'Web API'. Allows synchronizing common files, 
-    Continuous Integration ('CI') workflows, or configurations across many 
+Description: Deploy file changes across multiple GitHub
+    repositories using the 'GitHub' 'Web API'. Allows synchronizing common files,
+    Continuous Integration ('CI') workflows, or configurations across many
     repositories with a single command.
 License: AGPL (>= 3)
 URL: https://r-pkg.thecoatlessprofessor.com/multideploy/, https://github.com/coatless-rpkg/multideploy
