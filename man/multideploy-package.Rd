@@ -7,7 +7,7 @@
 \title{This package provides functions to deploy file changes across
 multiple GitHub repositories using the gh package.}
 \description{
-Provides functions to deploy file changes across multiple GitHub repositories using the GitHub API. Allows synchronizing common files, CI workflows, or configurations across many repositories with a single command.
+Deploy file changes across multiple GitHub repositories using the 'GitHub' 'Web API'. Allows synchronizing common files, Continuous Integration ('CI') workflows, or configurations across many repositories with a single command.
 }
 \seealso{
 Useful links:
