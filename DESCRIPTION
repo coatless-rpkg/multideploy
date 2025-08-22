@@ -1,5 +1,5 @@
 Package: multideploy
-Title: Deploy File Changes Across Multiple GitHub Repositories
+Title: Deploy File Changes Across Multiple 'GitHub' Repositories
 Version: 0.1.0
 Authors@R: c(
     person("James Joseph", "Balamuta",
@@ -8,10 +8,10 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-2826-8458")
     )
   )
-Description: Deploy file changes across multiple GitHub
-    repositories using the 'GitHub' 'Web API'. Allows synchronizing common files,
-    Continuous Integration ('CI') workflows, or configurations across many
-    repositories with a single command.
+Description: Deploy file changes across multiple 'GitHub'
+    repositories using the 'GitHub' 'Web API' <https://docs.github.com/en/rest>.
+    Allows synchronizing common files, Continuous Integration ('CI') workflows,
+    or configurations across many repositories with a single command.
 License: AGPL (>= 3)
 URL: https://r-pkg.thecoatlessprofessor.com/multideploy/, https://github.com/coatless-rpkg/multideploy
 BugReports: https://github.com/coatless-rpkg/multideploy/issues
