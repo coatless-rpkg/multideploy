@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   multideploy: multideploy.html
-last_built: 2025-08-18T18:39Z
+last_built: 2025-08-22T15:45Z
 urls:
   reference: https://r-pkg.thecoatlessprofessor.com/multideploy/reference
   article: https://r-pkg.thecoatlessprofessor.com/multideploy/articles
